@@ -1,4 +1,5 @@
 #ifndef define CLASSES_HPP
+#include <stdbool.h>
 
 class particle{
     public:
@@ -29,6 +30,6 @@ class box{
         void pop_particle(particle& part);
 };
 
-bool is_in_box(particle& p; box& b);
+bool is_in_box(particle& p, box& b);
 
 #endif
