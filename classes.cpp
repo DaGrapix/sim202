@@ -5,12 +5,17 @@ void box::append_particle(particle& part){
         p_particle = &part;
         return;
     }
-    if ()
-    double center[8][3];
-    for (int i = 1; i <= 2; i++){
-        for (int j = 1; i <= 4; j++){
-            if ((i==1) && (j==1)){
+    if (p_sub_box != nullptr){
+        box* ptr = p_sub_box;
+        
+    }
+    else{
+        double center[8][3];
+        for (int i = 1; i <= 2; i++){
+            for (int j = 1; i <= 4; j++){
+                if ((i==1) && (j==1)){
 
+                }
             }
         }
     }

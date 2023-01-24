@@ -29,4 +29,6 @@ class box{
         void pop_particle(particle& part);
 };
 
+bool is_in_box(particle& p; box& b);
+
 #endif
