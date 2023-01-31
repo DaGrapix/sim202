@@ -2,6 +2,7 @@
 #include <cmath>
 #include <vector>
 
+//Reinitialising a particle
 void particle::erase_particle(){
     if (position.empty()==false){
         position.clear();
@@ -18,6 +19,7 @@ void particle::erase_particle(){
     p_next_particle = nullptr;
 }
 
+//Constructors
 particle::particle(){
     erase_particle();
     position = vector<double>(3, 0);
@@ -36,10 +38,12 @@ particle::particle(vector<double> position_vector, vector<double> speed_vector, 
     force = force_vector;
 }
 
+//Destructor
 particle::~particle(){
     erase_particle();
 };
 
+//Printing
 void particle::print(ostream& out=cout){
     out << "position :     ";
     for (int i = 0; i <= 2; i++){
