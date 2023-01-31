@@ -12,4 +12,17 @@ int main(){
 
     cout << p << endl << q << endl;
 
+
+    vector<vector<int>> vec = vector<vector<int>>(3, vector<int> (4, 0));
+    vec[0][0] = 1;
+
+     for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 4; j++)
+        {
+            cout << vec[i][j] << " ";
+        }
+        cout<< endl;
+    }
+
 }
