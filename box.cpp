@@ -30,7 +30,7 @@ void box::append_particle(particle& part){
         }
     }
     else{
-        double quarter_box_length = (1/4)*(LENGTH/(pow(2,b.level)));
+        double quarter_box_length = (1/4)*(LENGTH/(pow(2,level)));
         double x,y,z = center[0], center[1], center[2];
         double sub_box_centers[8][3];
         sub_box_centers[0][0] = x - quarter_box_length;
