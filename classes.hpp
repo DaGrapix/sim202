@@ -1,24 +1,33 @@
 #ifndef define CLASSES_HPP
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
 #include <stdbool.h>
 #include <vector>
+using namespace std;
+
 
 class particle{
     public:
         //position
-        double position[3];
-        vector<double>* p_position;
+        vector<double> position;
         //speed
-        double speed[3];
-        vector<double>* p_speed;
+        vector<double> speed;
         //force
-        double force[3];
-        vector<double>* p_force;
+        vector<double> force;
         //successive positions taken by the particle
-        vector<vector<double>>* successive_positions;
-        int successive_positions_size;
+        vector<vector<double>> successive_positions;
         //pointer to the next particle
         particle* p_next_particle;
-        particle(vector<double> vector_);
+        //print
+        void print();
+        //constructors
+        particle();
+        particle(vector<double> position_vector, vector<double> speed_vector, vector<double> force_vector);
+        //reinitialisation of the particle
+        void erase_particle();
+        //destructor
+        ~particle();
 };
 
 class box{
