@@ -11,6 +11,9 @@ using namespace std;
 
 class particle{
     public:
+        //mass
+        double mass;
+        
         //position
         vector<double> position;
 

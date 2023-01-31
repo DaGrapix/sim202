@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "particle.hpp"
+#include <Eigen/Dense>
 
 int main(){
+    /*
     particle p = particle();
 
     vector<double> position_vector = vector<double>(3,1);
@@ -24,5 +26,28 @@ int main(){
         }
         cout<< endl;
     }
+
+
+    cout << endl<< endl;
+
+    vector<double> vec1 = {1, 2, 3};
+    vector<double> vec2 = vector<double>(vec1);
+    vec1 = 5*vec1;
+
+    vec2[0] = 0;
+
+
+    for(int i = 0; i < 4; i++)
+    {
+        cout << vec1[i] << " ";
+    }
+    cout << endl;
+    for(int i = 0; i < 4; i++)
+    {
+        cout << vec2[i] << " ";
+    }
+    */
+
+
 
 }
