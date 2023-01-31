@@ -28,7 +28,7 @@ class particle{
 
         //printing options
         void print(ostream& out=cout);
-        friend ostream& operator <<(ostream & out, const particle & particle_);
+        friend ostream& operator <<(ostream & out, particle & particle_);
 
         //constructors
         particle();
@@ -36,7 +36,7 @@ class particle{
 
         //reinitialisation of the particle
         void erase_particle();
-        
+
         //destructor
         ~particle();
 };

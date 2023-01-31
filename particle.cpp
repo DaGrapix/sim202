@@ -43,29 +43,28 @@ particle::~particle(){
     erase_particle();
 };
 
-//Printing
-void particle::print(ostream& out=cout){
-    out << "position :     ";
-    for (int i = 0; i <= 2; i++){
+
+void particle::print(ostream& out){
+    out << "position :     [";
+    for (int i = 0; i <= 1; i++){
         out << position[i] << ", ";
     }
-    out << position[3] << endl;
+    out << position[2] << "]" << endl;
 
-    out << "speed :        ";
-    for (int i = 0; i <= 2; i++){
-        cout << speed[i] << ", ";
+    out << "speed :        [";
+    for (int i = 0; i <= 1; i++){
+        out << speed[i] << ", ";
     }
-    out << speed[3] << endl;
+    out << speed[2] << "]" << endl;
 
-    out << "force :        ";
-    for (int i = 0; i <= 2; i++){
-        cout << force[i] << ", ";
+    out << "force :        [";
+    for (int i = 0; i <= 1; i++){
+        out << force[i] << ", ";
     }
-    out << force[3] << endl;
+    out << force[2] << "]" << endl;
 }
 
-ostream& operator <<(ostream & out, particle& particle_){
-    cout << "\n";
+ostream& operator <<(ostream& out, particle& particle_){
     particle_.print(out);
     return out;
 }
