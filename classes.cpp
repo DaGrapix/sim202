@@ -1,5 +1,6 @@
 #include "classes.hpp"
 #include <cmath>
+#include <vector>
 
 double LENGTH = 10;
 
