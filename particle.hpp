@@ -42,6 +42,9 @@ class particle{
 
         //destructor
         ~particle();
+
+        //surcharge d'opérateur
+        bool operator ==(particle& part);
 };
 
 ///////////////////////////////////////////////////////////////
@@ -108,6 +111,28 @@ void particle::print(ostream& out){
         out << force[i] << ", ";
     }
     out << force[2] << "]" << endl;
+}
+
+bool particle::operator ==(particle& part){
+    if (mass != part.mass){
+        return false;
+    }
+    if (not(position == part.position)){
+        return false;
+    }
+    if (not(speed == part.speed)){
+        return false;
+    }
+    if (not(force == part.force)){
+        return false;
+    }
+    if (not(successive_positions == part.successive_positions)){
+        return false;
+    }
+    if (p_next_particle != part.p_next_particle){
+        return false;
+    }
+    return true;
 }
 
 ostream& operator <<(ostream& out, particle& particle_){
