@@ -140,30 +140,31 @@ vecteur<vecteur<double>> box::sub_box_centers(){
 
 //append a particle in a box
 void box::append_particle(particle& part){
-    //If there is no prior particle in the box, we append the particle to it
-    if (p_particle==nullptr){
+    //If there is no sub_box and no prior particle in the box, we append the particle to it
+    if ((p_sub_box==nullptr) && (p_particle==nullptr)){
         p_particle = &part;
         mass = mass + part.mass;
         mass_center = part.position;
         return;
     }
-    //If the box has sub_boxes, we check which one can contain the particle and call our function back on that box
+
+    //If the box has sub_boxes, we check which one can contain the particle and call our function back on that box, we then adjust the center of mass of the current box
     if (p_sub_box != nullptr){
         box* ptr = p_sub_box;
-        while ((not is_in_box(part, *(ptr))) && ptr != nullptr){
+        while ((ptr != nullptr) && not(is_in_box(part, *(ptr)))){
             ptr = ptr->p_sister_box;
         }
         if (ptr != nullptr){
             ptr->append_particle(part);
-            ptr->mass_center = (1/(mass + part.mass))*(mass*mass_center + part.mass*part.position);
+            mass_center = (1/(mass + part.mass))*(mass*mass_center + part.mass*part.position);
         }
     }
 
-    //In the other case, if the box doesn't have sub_boxes, we create them and call our function back on our box
+    //In the other case, if the box doesn't have sub_boxes, but already has a particle in it, we create the sub_boxes and append the two particles to their respective sub_boxes
     else{
         vecteur<vecteur<double>> box_centers = sub_box_centers();
 
-        //creating the last box
+        //Creating the last box
         int sub_level = level + 1;
         vecteur<double> sub_box_center = box_centers[7];
         vecteur<double> sub_box_mass_center = box_centers[7];
@@ -176,6 +177,7 @@ void box::append_particle(particle& part){
 
         box* ptr = &last_box;
 
+        //Creating the other boxes
         for (int i = 6; i <= 0; i--){
             vecteur<double> sub_box_center = box_centers[i];
             vecteur<double> sub_box_mass_center = vecteur<double>(box_centers[i]);
@@ -187,10 +189,13 @@ void box::append_particle(particle& part){
             ptr = &current_box;
         }
 
-        //The first box is the first sub_box
+        //The first box is the sub_box
         p_sub_box = ptr;
 
+        //We call back our function on our two particles
         append_particle(part);
+        append_particle(*p_particle);
+        p_particle = nullptr;
     }
 }
 
@@ -233,28 +238,29 @@ vecteur<double> box::mass_center_calculation(){
 */
 
 void box::pop_particle (particle& part){
-
-    //suppression de part de la liste chainee de particules de la boite
-    particle* ptr = p_particle;
-    while(not(*(ptr->p_next_particle) == part)){ //faire fonction comparaison de particules
-        ptr = ptr->p_next_particle;
+    //If the box contains a particles (=> it doesn't have sub_boxes), then we check if it is the particle we want to pop
+    if (&part == p_particle){
+        p_particle = nullptr;
+        mass = 0;
+        mass_center = vecteur<double>(3,0);
     }
-    ptr->p_next_particle = part.p_next_particle;
-    part.erase_particle();
-    //calcul de la nouvelle masse de la boite
-    mass = mass_calculation();
-
-    //calcul du nouveau centre de masse de la boite
-    mass_center = mass_center_calculation();
 
     //suppression de la particule dans la potentielle sous-boite contenant la particule
-    if (p_sub_box != nullptr){
+    else if (p_sub_box != nullptr){
         box* ptr = p_sub_box;
         while ((not is_in_box(part, *(ptr))) && ptr != nullptr){
             ptr = ptr->p_sister_box;
         }
-        if (ptr != nullptr){
+        
+        if (ptr == nullptr){
+            cout << "Error, particle not found in box" << endl;
+        }
+        else{
             ptr->pop_particle(part);
+            //calcul du nouveau centre de masse de la boite
+            mass_center = (mass*mass_center - part.mass*part.position)/(mass - part.mass);
+            //calcul de la nouvelle masse de la boite
+            mass = mass - part.mass;
         }
     }
 }
