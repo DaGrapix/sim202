@@ -151,11 +151,11 @@ void box::append_particle(particle& part){
     if (p_sub_box != nullptr){
         box* ptr = p_sub_box;
         while ((not is_in_box(part, *(ptr))) && ptr != nullptr){
-            ptr = (*ptr).p_sister_box;
+            ptr = ptr->p_sister_box;
         }
         if (ptr != nullptr){
-            (*ptr).append_particle(part);
-            (*ptr).mass_center = (1/(mass + part.mass))*(mass_center + part.position);
+            ptr->append_particle(part);
+            ptr->mass_center = (1/(mass + part.mass))*(mass*mass_center + part.mass*part.position);
         }
     }
 
@@ -191,10 +191,12 @@ void box::append_particle(particle& part){
         p_sub_box = ptr;
 
         append_particle(part);
-        
     }
 }
 
+
+//Pas utile
+/*
 double box::mass_calculation(){
     // pour la masse d'une particule: ajouter masse dans la d�finition de la classe particle
     double m = 0;
@@ -210,22 +212,25 @@ vecteur<double> box::mass_center_calculation(){
     vecteur<double> m_center = vecteur<double>(3,0);
     double half_box_length = (1/2)*(LENGTH/(pow(2,level)));
     particle* ptr = p_particle;
-    if (ptr != nullptr){
-        do{
-            m_center[0] = m_center[0] + ptr->mass*(ptr->position[0]);
-            m_center[1] = m_center[1] + ptr->mass*(ptr->position[1]);
-            m_center[2] = m_center[2] + ptr->mass*(ptr->position[2]);
-            ptr = ptr->p_next_particle;
-        }while(ptr != nullptr);
+    while(ptr != nullptr){
+        m_center[0] = m_center[0] + ptr->mass*(ptr->position[0]);
+        m_center[1] = m_center[1] + ptr->mass*(ptr->position[1]);
+        m_center[2] = m_center[2] + ptr->mass*(ptr->position[2]);
+        ptr = ptr->p_next_particle;
     }
-    else{
-        cout << "Error, no particle" << endl;
-    }
+
     m_center[0] = m_center[0]/mass;
     m_center[1] = m_center[1]/mass;
     m_center[2] = m_center[2]/mass;
+
+    box* box_ptr = p_sub_box;
+    while(box_ptr != nullptr){
+        m_center = m_center + box_ptr->mass_center_calculation();
+        box_ptr = box_ptr->p_sister_box;
+    }
     return m_center;
 }
+*/
 
 void box::pop_particle (particle& part){
 
