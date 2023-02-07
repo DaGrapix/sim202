@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "particle.hpp"
 #include "vecteur.hpp"
-#include "box.hpp"
 
 int main(){
     /*
@@ -48,8 +47,6 @@ int main(){
         cout << vec2[i] << " ";
     }
     */
-    Vecteur<double> v(4,1);
+    vecteur v(4,0);
     cout << v << endl;
-    particle p(v, v, v);
-    cout << p << endl;
 }
