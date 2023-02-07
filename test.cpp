@@ -64,7 +64,8 @@ int main(){
 
     cout << "level " << b.level << endl;
 
-    b.append_particle(p1);
+    b.append_particle(p2);
+    cout << *(b.p_particle) << endl;
     /*
     b.append_particle(p2);
 
