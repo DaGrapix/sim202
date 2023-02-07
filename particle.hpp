@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <stdbool.h>
-#include <vector>
+#include "vecteur.hpp"
 #include <cmath>
 using namespace std;
 
@@ -15,16 +15,16 @@ class particle{
         double mass;
         
         //position
-        vector<double> position;
+        vecteur<double> position;
 
         //speed
-        vector<double> speed;
+        vecteur<double> speed;
 
         //force
-        vector<double> force;
+        vecteur<double> force;
 
         //successive positions taken by the particle
-        vector<vector<double>> successive_positions;
+        vecteur<vecteur<double>> successive_positions;
 
         //pointer to the next particle
         particle* p_next_particle;
@@ -35,7 +35,7 @@ class particle{
 
         //constructors
         particle();
-        particle(vector<double> position_vector, vector<double> speed_vector, vector<double> force_vector);
+        particle(vecteur<double> position_vecteur, vecteur<double> speed_vecteur, vecteur<double> force_vecteur);
 
         //reinitialisation of the particle
         void erase_particle();
@@ -68,20 +68,20 @@ void particle::erase_particle(){
 //Constructors
 particle::particle(){
     erase_particle();
-    position = vector<double>(3, 0);
-    speed = vector<double>(3, 0);
-    force = vector<double>(3, 0);
+    position = vecteur<double>(3, 0);
+    speed = vecteur<double>(3, 0);
+    force = vecteur<double>(3, 0);
 
-    vector<double> default_vector = vector<double>(3,0);
-    successive_positions = vector<vector<double>>(1, default_vector);
+    vecteur<double> default_vecteur = vecteur<double>(3,0);
+    successive_positions = vecteur<vecteur<double>>(1, default_vecteur);
     p_next_particle = nullptr;
 }
 
-particle::particle(vector<double> position_vector, vector<double> speed_vector, vector<double> force_vector){
+particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecteur, vecteur<double> force_vecteur){
     erase_particle();
-    position = position_vector;
-    speed = speed_vector;
-    force = force_vector;
+    position = position_vecteur;
+    speed = speed_vecteur;
+    force = force_vecteur;
 }
 
 //Destructor

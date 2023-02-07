@@ -48,8 +48,22 @@ int main(){
         cout << vec2[i] << " ";
     }
     */
-    Vecteur<double> v(4,1);
+    vecteur<double> v(3, 1);
+    vecteur<double> u(3, 2);
     cout << v << endl;
-    particle p(v, v, v);
-    cout << p << endl;
+    particle p1 = particle(v, v, v);
+    particle p2 = particle(u,u,u);
+
+    particle* p_p1 = &p1;
+    p_p1->force = u;
+
+    cout << p1 << endl;
+
+/*
+    box b = box();
+    b.append_particle(p1);
+    b.append_particle(p2);
+
+    cout << b.p_particle << endl;
+*/
 }

@@ -1,5 +1,5 @@
-#ifndef VECTEUR_HPP
-#define VECTEUR_HPP
+#ifndef vecteur_HPP
+#define vecteur_HPP
 
 #include <iostream>
 #include <vector>
@@ -13,13 +13,13 @@ inline void stop(const string& mes)
 }
 
 // ==========================================================
-// class Vecteur<T> heritant de la classe vector<T> de la STL
+// class vecteur<T> heritant de la classe vector<T> de la STL
 // ==========================================================
 template <typename T>
-class Vecteur:public vector<T>
+class vecteur:public vector<T>
 {
   public:
-    Vecteur(int d=0, const T& x=T())
+    vecteur(int d=0, const T& x=T())
      {if(d>0) this->assign(d,x);}
     void print(ostream& out) const
     {
@@ -31,26 +31,26 @@ class Vecteur:public vector<T>
     const T& operator()(int i) const {return vector<T>::at(i-1);}
     T& operator()(int i) {return vector<T>::at(i-1);}
 
-    Vecteur<T>& operator+=(const Vecteur<T>& v)
+    vecteur<T>& operator+=(const vecteur<T>& v)
     {
         if(v.size()!=this->size()) stop("dimensions incompatible dans u+=v");
         auto itv=v.begin();
         for(auto it=this->begin();it!=this->end();++it, ++itv) *it+=*itv;
         return *this;
     }
-    Vecteur<T>& operator-=(const Vecteur<T>& v)
+    vecteur<T>& operator-=(const vecteur<T>& v)
     {
         if(v.size()!=this->size()) stop("dimensions incompatible dans u-=v");
         auto itv=v.begin();
         for(auto it=this->begin();it!=this->end();++it, ++itv) *it-=*itv;
         return *this;
     }
-    Vecteur<T>& operator*=(const T& a)
+    vecteur<T>& operator*=(const T& a)
     {
         for(auto it=this->begin();it!=this->end();++it) *it*=a;
         return *this;
     }
-    Vecteur<T>& operator/=(const T& a)
+    vecteur<T>& operator/=(const T& a)
     {
          if(a==0) stop("division par zero dans u/=a");
          for(auto it=this->begin();it!=this->end();++it) *it/=a;
@@ -59,51 +59,51 @@ class Vecteur:public vector<T>
 };
 
 template <typename T>
-ostream& operator<<(ostream& out, const Vecteur<T>& u)
+ostream& operator<<(ostream& out, const vecteur<T>& u)
 {
     u.print(out);
     return out;
 }
 // operations algebriques
 template <typename T>
-Vecteur<T> operator-(const Vecteur<T>& u)
+vecteur<T> operator-(const vecteur<T>& u)
 {
-    Vecteur<T> w=u;
+    vecteur<T> w=u;
     return w*=-1;
 }
 template <typename T>
-Vecteur<T> operator+(const Vecteur<T>& u, const Vecteur<T>& v)
+vecteur<T> operator+(const vecteur<T>& u, const vecteur<T>& v)
 {
-    Vecteur<T> w=u;
+    vecteur<T> w=u;
     return w+=v;
 }
 template <typename T>
-Vecteur<T> operator-(const Vecteur<T>& u, const Vecteur<T>& v)
+vecteur<T> operator-(const vecteur<T>& u, const vecteur<T>& v)
 {
-    Vecteur<T> w=u;
+    vecteur<T> w=u;
     return w-=v;
 }
 template <typename T>
-Vecteur<T> operator*(const Vecteur<T>& u, const T& a)
+vecteur<T> operator*(const vecteur<T>& u, const T& a)
 {
-    Vecteur<T> w=u;
+    vecteur<T> w=u;
     return w*=a;
 }
 template <typename T>
-Vecteur<T> operator*(const T& a,const Vecteur<T>& u)
+vecteur<T> operator*(const T& a,const vecteur<T>& u)
 {
-    Vecteur<T> w=u;
+    vecteur<T> w=u;
     return w*=a;
 }
 template <typename T>
-Vecteur<T> operator/(const Vecteur<T>& u, const T& a)
+vecteur<T> operator/(const vecteur<T>& u, const T& a)
 {
-    Vecteur<T> w=u;
+    vecteur<T> w=u;
     return w/=a;
 }
 // produit scalaire
 template <typename T>
-T operator|(const Vecteur<T>& u, const Vecteur<T>& v)
+T operator|(const vecteur<T>& u, const vecteur<T>& v)
 {
     if(u.size()!=v.size()) stop("dimensions incompatible dans u|v");
     T ps=T();
