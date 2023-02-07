@@ -209,20 +209,21 @@ double box::mass_calculation(){
 vecteur<double> box::mass_center_calculation(){
     vecteur<double> m_center = vecteur<double>(3,0);
     double half_box_length = (1/2)*(LENGTH/(pow(2,level)));
-    // pour la masse d'une particule: ajouter masse dans la definition de la classe particle
-    m_center[1] = center[1] - half_box_length;
-    m_center[0] = center[0] - half_box_length;
-    m_center[2] = center[2] - half_box_length;
     particle* ptr = p_particle;
-    while(ptr != nullptr){
-        m_center[0] = ptr->mass * (ptr->position[0]-(center[0] - half_box_length));
-        m_center[1] = ptr->mass * (ptr->position[1]-(center[1] - half_box_length));
-        m_center[2] = ptr->mass * (ptr->position[2]-(center[2] - half_box_length));
-        ptr = (*ptr).p_next_particle;
+    if (ptr != nullptr){
+        do{
+            m_center[0] = m_center[0] + ptr->mass*(ptr->position[0]);
+            m_center[1] = m_center[1] + ptr->mass*(ptr->position[1]);
+            m_center[2] = m_center[2] + ptr->mass*(ptr->position[2]);
+            ptr = ptr->p_next_particle;
+        }while(ptr != nullptr);
     }
-    m_center[0]=m_center[0]/mass;
-    m_center[1]=m_center[1]/mass;
-    m_center[2]=m_center[2]/mass;
+    else{
+        cout << "Error, no particle" << endl;
+    }
+    m_center[0] = m_center[0]/mass;
+    m_center[1] = m_center[1]/mass;
+    m_center[2] = m_center[2]/mass;
     return m_center;
 }
 

@@ -59,11 +59,15 @@ int main(){
 
     cout << p1 << endl;
 
-/*
+
     box b = box();
+
+    cout << "level " << b.level << endl;
+
     b.append_particle(p1);
+    /*
     b.append_particle(p2);
 
     cout << b.p_particle << endl;
-*/
+    */
 }
