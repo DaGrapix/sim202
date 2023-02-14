@@ -88,16 +88,9 @@ int main(){
 
     box* ptr = b.p_sub_box;
 
-    box_centers = b.sub_box_centers();
-
-    vecteur<double> sub_box_center = box_centers[i];
-    vecteur<double> sub_box_mass_center = box_centers[i];
-    int sub_box_mass = 0.;
-    particle* sub_box_p_particle = nullptr;
-    box* sub_box_p_sub_box = nullptr;
-    box* sub_box_p_sister_box = ptr;
-    box current_box = box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
-
+    vecteur<vecteur<double>> box_centers = b.sub_box_centers();
+    
+    /*
     for (int i; i <= 7; i++){
         cout << i << endl;
         i++;
@@ -107,7 +100,7 @@ int main(){
         ptr = ptr->p_sister_box;
     }
 
-    /*
+    
     cout << b.p_particle << endl;
     */
 }
