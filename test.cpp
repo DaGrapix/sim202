@@ -80,22 +80,25 @@ int main(){
     if (b.p_sub_box->p_particle==nullptr){
         cout << "NO SUB PARTICLE" << endl;
     }
+    else{
+        cout << "SUB PARTICLE" << endl;
+    }
 
     //cout << *(b.p_sub_box->p_particle) << endl;
 
     box* ptr = b.p_sub_box;
-    int i = 1;
 
+    box_centers = b.sub_box_centers();
 
-    double quarter_box_length = (0.25)*(LENGTH/(pow(2,b.level)));
-    cout << "quarter_box_length " << quarter_box_length << endl;
+    vecteur<double> sub_box_center = box_centers[i];
+    vecteur<double> sub_box_mass_center = box_centers[i];
+    int sub_box_mass = 0.;
+    particle* sub_box_p_particle = nullptr;
+    box* sub_box_p_sub_box = nullptr;
+    box* sub_box_p_sister_box = ptr;
+    box current_box = box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
 
-    vecteur<vecteur<double>> the_box = b.sub_box_centers();
-
-    cout << the_box << endl;
-
-    /*
-    while (ptr != nullptr){
+    for (int i; i <= 7; i++){
         cout << i << endl;
         i++;
         if (ptr->p_particle != nullptr){
@@ -104,9 +107,7 @@ int main(){
         ptr = ptr->p_sister_box;
     }
 
-    
-    b.append_particle(p2);
-
+    /*
     cout << b.p_particle << endl;
     */
 }

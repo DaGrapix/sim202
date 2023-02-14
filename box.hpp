@@ -56,7 +56,7 @@ void box::erase_box(){
     p_particle = nullptr;
     p_sub_box = nullptr;
     p_sister_box = nullptr;
-    mass = 0;
+    mass = 0.;
     level = 0;
 }
 
@@ -64,8 +64,8 @@ void box::erase_box(){
 box::box(){
     erase_box();
     level = 0;
-    center = vecteur<double>(3,0);
-    mass_center = vecteur<double>(3,0);
+    center = vecteur<double>(3,0.);
+    mass_center = vecteur<double>(3,0.);
 }
 
 box::box(int level_, vecteur<double> center_, vecteur<double> mass_center_, double mass_, particle* p_particle_, box* p_sub_box_, box* p_sister_box_){
@@ -85,7 +85,7 @@ box::~box(){
 
 //checks if the particle is in the box
 bool is_in_box(particle& p, box& b){
-    double half_side = (1/2)*(LENGTH/(pow(2,b.level)));
+    double half_side = (0.5)*(LENGTH/(pow(2,b.level)));
     if ((p.position[0] < b.center[0] - half_side) || (p.position[0] > b.center[0] + half_side)){
         return false;
     }
@@ -156,7 +156,7 @@ void box::append_particle(particle& part){
         }
         if (ptr != nullptr){
             ptr->append_particle(part);
-            mass_center = (1/(mass + part.mass))*(mass*mass_center + part.mass*part.position);
+            mass_center = (1.0/(mass + part.mass))*(mass*mass_center + part.mass*part.position);
         }
     }
 
@@ -180,8 +180,8 @@ void box::append_particle(particle& part){
         //Creating the other boxes
         for (int i = 6; i <= 0; i--){
             vecteur<double> sub_box_center = box_centers[i];
-            vecteur<double> sub_box_mass_center = vecteur<double>(box_centers[i]);
-            int sub_box_mass = 0;
+            vecteur<double> sub_box_mass_center = box_centers[i];
+            int sub_box_mass = 0.;
             particle* sub_box_p_particle = nullptr;
             box* sub_box_p_sub_box = nullptr;
             box* sub_box_p_sister_box = ptr;
