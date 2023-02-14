@@ -178,7 +178,7 @@ void box::append_particle(particle& part){
         box* ptr = &last_box;
 
         //Creating the other boxes
-        for (int i = 6; i > 0; i--){
+        for (int i = 6; i >= 0; i--){
             vecteur<double> sub_box_center = box_centers[i];
             vecteur<double> sub_box_mass_center = box_centers[i];
             int sub_box_mass = 0.;
