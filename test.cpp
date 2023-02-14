@@ -87,8 +87,8 @@ int main(){
     int i = 1;
 
 
-    double quarter_box_length = (1/4)*(LENGTH/(pow(2,b.level)));
-    cout << quarter_box_length << endl;
+    double quarter_box_length = (0.25)*(LENGTH/(pow(2,b.level)));
+    cout << "quarter_box_length " << quarter_box_length << endl;
 
     vecteur<vecteur<double>> the_box = b.sub_box_centers();
 

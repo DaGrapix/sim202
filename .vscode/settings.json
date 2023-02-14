@@ -1,11 +1,13 @@
 {
     "files.associations": {
+        "*.rmd": "markdown",
         "vector": "cpp",
         "array": "cpp",
         "string_view": "cpp",
         "iostream": "cpp",
         "iosfwd": "cpp",
         "ostream": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "cmath": "cpp"
     }
 }

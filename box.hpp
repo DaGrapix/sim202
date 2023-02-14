@@ -100,7 +100,7 @@ bool is_in_box(particle& p, box& b){
 
 //returns a matrix with each line being the position of the center of a sub box
 vecteur<vecteur<double>> box::sub_box_centers(){
-    double quarter_box_length = (1/4)*(LENGTH/(pow(2,level)));
+    double quarter_box_length = (0.25)*(LENGTH/(pow(2,level)));
     double x = center[0], y = center[1], z = center[2];
     vecteur<vecteur<double>> centers_matrix = vecteur<vecteur<double>>(8, vecteur<double>(3,0));
     centers_matrix[0][0] = x - quarter_box_length;
