@@ -57,8 +57,8 @@ int main(){
     particle* p_p1 = &p1;
     p_p1->force = u;
 
-    cout << p1 << endl;
-
+    cout << "p1" << endl << p1 << endl;
+    cout << "p2" << endl << p2 << endl;
 
     box b = box();
 
@@ -66,7 +66,45 @@ int main(){
 
     b.append_particle(p2);
     cout << *(b.p_particle) << endl;
+
+    b.append_particle(p1);
+    
+    if (b.p_particle==nullptr){
+        cout << "NO PARTICLE" << endl;
+    }
+
+    if (b.p_sub_box==nullptr){
+        cout << "NO SUB BOX" << endl;
+    }
+
+    if (b.p_sub_box->p_particle==nullptr){
+        cout << "NO SUB PARTICLE" << endl;
+    }
+
+    //cout << *(b.p_sub_box->p_particle) << endl;
+
+    box* ptr = b.p_sub_box;
+    int i = 1;
+
+
+    double quarter_box_length = (1/4)*(LENGTH/(pow(2,b.level)));
+    cout << quarter_box_length << endl;
+
+    vecteur<vecteur<double>> the_box = b.sub_box_centers();
+
+    cout << the_box << endl;
+
     /*
+    while (ptr != nullptr){
+        cout << i << endl;
+        i++;
+        if (ptr->p_particle != nullptr){
+            cout << *(ptr->p_particle) << endl;
+        }
+        ptr = ptr->p_sister_box;
+    }
+
+    
     b.append_particle(p2);
 
     cout << b.p_particle << endl;
