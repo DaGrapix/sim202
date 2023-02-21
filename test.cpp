@@ -62,12 +62,15 @@ int main(){
 
     box b = box();
 
+    cout << "p1 is in box : " << is_in_box(p1, b) << endl;
+    cout << "p2 is in box : " << is_in_box(p2, b) << endl;
+
     cout << "level " << b.level << endl;
 
-    b.append_particle(p2);
-    cout << *(b.p_particle) << endl;
-
     b.append_particle(p1);
+    cout << *(b.p_particle) << endl << endl;
+
+    b.append_particle(p2);
     
     if (b.p_particle==nullptr){
         cout << "NO PARTICLE" << endl;
@@ -82,6 +85,9 @@ int main(){
     }
     else{
         cout << "SUB PARTICLE" << endl;
+        cout << b.p_sub_box->p_particle << endl;
+        cout << b.p_sub_box->p_particle->position << endl;
+        cout << *(b.p_sub_box->p_particle) << endl;
     }
 
     //cout << *(b.p_sub_box->p_particle) << endl;
@@ -89,14 +95,12 @@ int main(){
     box* ptr = b.p_sub_box;
 
     vecteur<vecteur<double>> box_centers = b.sub_box_centers();
+    cout << box_centers << endl;
     
-
-    for (int i = 0; i <= 7; i++){
-        cout << i << endl;
-        i++;
-        if (ptr->p_particle != nullptr){
-            cout << i << *(ptr->p_particle) << endl;
-        }
+    for (int j = 0; j <= 6; j++){
+        cout << j << endl;
+        j++;
+        cout << ptr->p_particle << endl;
         ptr = ptr->p_sister_box;
     }
 

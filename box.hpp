@@ -29,13 +29,15 @@ class box{
         void pop_particle(particle& part);
         double mass_calculation();
         vecteur<double> mass_center_calculation();
+        void print(ostream& out=cout);
 };
 
 bool is_in_box(particle& p, box& b);
 
-
-
-
+ostream& operator <<(ostream& out, particle& box_){
+    box_.print(out);
+    return out;
+}
 
 ///////////////////////////////////////////////////////////////
 //////////////////    Implémentation      /////////////////////
@@ -161,7 +163,7 @@ void box::append_particle(particle& part){
     }
 
     //In the other case, if the box doesn't have sub_boxes, but already has a particle in it, we create the sub_boxes and append the two particles to their respective sub_boxes
-    else{
+    else if (p_sub_box == nullptr){
         vecteur<vecteur<double>> box_centers = sub_box_centers();
 
         //Creating the last box
@@ -265,6 +267,32 @@ void box::pop_particle (particle& part){
     }
 }
 
+
+//print
+void box::print(ostream & out){
+    cout << "level : " << level << endl;
+    cout << "center : " << center << endl;
+    cout << "mass_center : " << mass_center << endl;
+    cout << "mass : " << mass << endl;
+    if (p_particle != nullptr){
+        cout << "particle : " << *p_particle << endl;
+    }
+    else{
+        cout << "no particle" << endl;
+    }
+    if (p_sub_box != nullptr){
+        cout << "there is a sub box" << endl;
+    }
+    else{
+        cout << "no sub box" << endl;
+    }
+    if (p_sister_box != nullptr){
+        cout << "there is sister box" << endl;
+    }
+    else{
+        cout << "no sister box" << endl;
+    }
+}
 
 
 #endif
