@@ -65,12 +65,11 @@ int main(){
     cout << "p1 is in box : " << is_in_box(p1, b) << endl;
     cout << "p2 is in box : " << is_in_box(p2, b) << endl;
 
-    cout << "level " << b.level << endl;
-
     b.append_particle(p1);
-    cout << *(b.p_particle) << endl << endl;
+    cout << b << endl << endl;
 
     b.append_particle(p2);
+    cout << b << endl << endl;
     
     if (b.p_particle==nullptr){
         cout << "NO PARTICLE" << endl;

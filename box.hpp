@@ -34,7 +34,7 @@ class box{
 
 bool is_in_box(particle& p, box& b);
 
-ostream& operator <<(ostream& out, particle& box_){
+ostream& operator <<(ostream& out, box& box_){
     box_.print(out);
     return out;
 }
@@ -45,7 +45,67 @@ ostream& operator <<(ostream& out, particle& box_){
 
 
 
+//recursively delete a box and all of its sub_boxes and sister boxes
+/*
+void recursive_delete(box* p_box, box* p_mother_box=nullptr, box* parent_list, int depth){
+    if (p_box==nullptr){
+        return;
+    }
+    box* ptr = p_box;
+    box* ptr_mother = p_mother_box;
+    if (ptr->p_sub_box==nullptr){
+        box* ptr_sis = p_box->p_sister_box;
+        while (ptr != nullptr){
+            delete ptr;
+            ptr = ptr_sis;
+            ptr_sis = ptr_sis->p_sister_box;
+        }
+        recursive_delete(p_mother_box, p_mother_mother_box);
+    }
+    else{
+        recursive_delete(ptr->p_sub_box, ptr, p_mother_box);
+    }
+}
+*/
 
+box** remove_parent(box** parent_list, int depth){
+    box** array = new box*[depth - 1];
+    for (int i = 0; i <= depth - 2; i++){
+        array[i] = parent_list[i];
+    }
+    return array;
+}
+
+box** add_parent(box** parent_list, int depth, box* p_parent){
+    box** array = new box*[depth + 1];
+    for (int i = 0; i <= depth - 1; i++){
+        array[i] = parent_list[i];
+    }
+    array[depth] = p_parent;
+    return array;
+}
+
+void recursive_delete(box* p_box, box** parent_list, int depth){
+    if ((p_box==nullptr) && (depth = 0)){
+        return;
+    }
+    box* ptr = p_box;
+    box* ptr_parent = parent_list[depth - 1];
+    if (ptr->p_sub_box==nullptr){
+        box* ptr_sis = p_box->p_sister_box;
+        while (ptr != nullptr){
+            delete ptr;
+            ptr = ptr_sis;
+            ptr_sis = ptr_sis->p_sister_box;
+        }
+        box** new_parent_list = remove_parent(parent_list, depth);
+        recursive_delete(ptr_parent, new_parent_list, depth - 1);
+    }
+    else{
+        box** new_parent_list = add_parent(parent_list, depth, ptr);
+        recursive_delete(ptr->p_sub_box, new_parent_list, depth + 1);
+    }
+}
 
 //box reinitialiser
 void box::erase_box(){
@@ -61,6 +121,8 @@ void box::erase_box(){
     mass = 0.;
     level = 0;
 }
+
+
 
 //Constructors
 box::box(){
@@ -82,7 +144,7 @@ box::box(int level_, vecteur<double> center_, vecteur<double> mass_center_, doub
 
 //destructor
 box::~box(){
-    erase_box();
+    recursive_delete(this);
 }
 
 //checks if the particle is in the box
@@ -187,8 +249,8 @@ void box::append_particle(particle& part){
             particle* sub_box_p_particle = nullptr;
             box* sub_box_p_sub_box = nullptr;
             box* sub_box_p_sister_box = ptr;
-            box current_box = box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
-            ptr = &current_box;
+            box* p_current_box = new box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
+            ptr = p_current_box;
         }
 
         //The first box is the sub_box
@@ -198,6 +260,10 @@ void box::append_particle(particle& part){
         append_particle(part);
         append_particle(*p_particle);
         p_particle = nullptr;
+    }
+
+    else{
+        cout << "problem" << endl;
     }
 }
 
@@ -275,7 +341,9 @@ void box::print(ostream & out){
     cout << "mass_center : " << mass_center << endl;
     cout << "mass : " << mass << endl;
     if (p_particle != nullptr){
-        cout << "particle : " << *p_particle << endl;
+        cout << "####### particle #######" << endl;
+        cout << *p_particle;
+        cout << "########################" << endl;
     }
     else{
         cout << "no particle" << endl;

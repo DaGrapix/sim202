@@ -8,7 +8,7 @@
 #include <cmath>
 using namespace std;
 
-
+double MASS = 1;
 class particle{
     public:
         //mass
@@ -36,6 +36,7 @@ class particle{
         //constructors
         particle();
         particle(vecteur<double> position_vecteur, vecteur<double> speed_vecteur, vecteur<double> force_vecteur);
+        particle(vecteur<double> position_vecteur, vecteur<double> speed_vecteur, vecteur<double> force_vecteur, double mass_);
 
         //reinitialisation of the particle
         void erase_particle();
@@ -89,6 +90,15 @@ particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecte
     position = position_vecteur;
     speed = speed_vecteur;
     force = force_vecteur;
+    mass = MASS;
+}
+
+particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecteur, vecteur<double> force_vecteur, double mass_){
+    erase_particle();
+    position = position_vecteur;
+    speed = speed_vecteur;
+    force = force_vecteur;
+    mass = mass_;
 }
 
 //Destructor
@@ -115,6 +125,7 @@ void particle::print(ostream& out){
         out << force[i] << ", ";
     }
     out << force[2] << "]" << endl;
+    out << "mass :         " << mass << endl;
 }
 
 bool particle::operator ==(particle& part){
