@@ -90,17 +90,16 @@ int main(){
 
     vecteur<vecteur<double>> box_centers = b.sub_box_centers();
     
-    /*
-    for (int i; i <= 7; i++){
+
+    for (int i = 0; i <= 7; i++){
         cout << i << endl;
         i++;
         if (ptr->p_particle != nullptr){
-            cout << *(ptr->p_particle) << endl;
+            cout << i << *(ptr->p_particle) << endl;
         }
         ptr = ptr->p_sister_box;
     }
 
     
     cout << b.p_particle << endl;
-    */
 }
