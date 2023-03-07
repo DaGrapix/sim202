@@ -50,9 +50,11 @@ int main(){
     */
     vecteur<double> v(3, 1.0);
     vecteur<double> u(3, 2.0);
+    vecteur<double> w(3, 5.0);
     cout << v << endl;
     particle p1 = particle(v, v, v);
-    particle p2 = particle(u,u,u);
+    particle p2 = particle(u, u, u);
+    particle p3 = particle(w, w, w);
 
     vecteur<double> k = p1.position - (1/2.0)*p2.position;
     cout << "diff : " << k << endl;
@@ -69,5 +71,8 @@ int main(){
     cout << b << endl << endl;
 
     b.append_particle(p2);
+    cout << b << endl << endl;
+
+    b.append_particle(p3);
     cout << b << endl << endl;
 }
