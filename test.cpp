@@ -70,7 +70,4 @@ int main(){
 
     b.append_particle(p2);
     cout << b << endl << endl;
-
-    b.append_particle(p2);
-    cout << b << endl << endl;
 }
