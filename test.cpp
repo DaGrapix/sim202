@@ -48,14 +48,11 @@ int main(){
         cout << vec2[i] << " ";
     }
     */
-    vecteur<double> v(3, 1);
-    vecteur<double> u(3, 2);
+    vecteur<double> v(3, 1.0);
+    vecteur<double> u(3, 2.0);
     cout << v << endl;
     particle p1 = particle(v, v, v);
     particle p2 = particle(u,u,u);
-
-    particle* p_p1 = &p1;
-    p_p1->force = u;
 
     cout << "p1" << endl << p1 << endl;
     cout << "p2" << endl << p2 << endl;
@@ -70,39 +67,4 @@ int main(){
 
     b.append_particle(p2);
     cout << b << endl << endl;
-    
-    if (b.p_particle==nullptr){
-        cout << "NO PARTICLE" << endl;
-    }
-
-    if (b.p_sub_box==nullptr){
-        cout << "NO SUB BOX" << endl;
-    }
-
-    if (b.p_sub_box->p_particle==nullptr){
-        cout << "NO SUB PARTICLE" << endl;
-    }
-    else{
-        cout << "SUB PARTICLE" << endl;
-        cout << b.p_sub_box->p_particle << endl;
-        cout << b.p_sub_box->p_particle->position << endl;
-        cout << *(b.p_sub_box->p_particle) << endl;
-    }
-
-    //cout << *(b.p_sub_box->p_particle) << endl;
-
-    box* ptr = b.p_sub_box;
-
-    vecteur<vecteur<double>> box_centers = b.sub_box_centers();
-    cout << box_centers << endl;
-    
-    for (int j = 0; j <= 6; j++){
-        cout << j << endl;
-        j++;
-        cout << ptr->p_particle << endl;
-        ptr = ptr->p_sister_box;
-    }
-
-    
-    cout << b.p_particle << endl;
 }

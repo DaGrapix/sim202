@@ -44,41 +44,6 @@ ostream& operator <<(ostream& out, box& box_){
 
 
 
-//recursively delete a box and all of its sub_boxes and sister boxes
-/*
-void recursive_delete(box* p_box, box* p_mother_box=nullptr, box* parent_list, int depth){
-    if (p_box==nullptr){
-        return;
-    }
-    box* ptr = p_box;
-    box* ptr_mother = p_mother_box;
-    if (ptr->p_sub_box==nullptr){
-        box* ptr_sis = p_box->p_sister_box;
-        while (ptr != nullptr){
-            delete ptr;
-            ptr = ptr_sis;
-            ptr_sis = ptr_sis->p_sister_box;
-        }
-        recursive_delete(p_mother_box, p_mother_mother_box);
-    }
-    else{
-        recursive_delete(ptr->p_sub_box, ptr, p_mother_box);
-    }
-}
-*/
-
-void recursive_delete(box* p_box){
-    if (p_box==nullptr){
-        return;
-    }
-    recursive_delete(p_box->p_sub_box);
-    recursive_delete(p_box->p_sister_box);
-    if ((p_box->p_sub_box==nullptr) & (p_box->p_sister_box==nullptr)){
-        delete p_box;
-        return;
-    }
-}
-
 //box reinitialiser
 void box::erase_box(){
     if(center.empty()==false){
@@ -90,12 +55,9 @@ void box::erase_box(){
     p_particle = nullptr;
     p_sub_box = nullptr;
     p_sister_box = nullptr;
-    p_parent_box = nullptr;
     mass = 0.;
     level = 0;
 }
-
-
 
 //Constructors
 box::box(){
@@ -117,7 +79,18 @@ box::box(int level_, vecteur<double> center_, vecteur<double> mass_center_, doub
 
 //destructor
 box::~box(){
-    recursive_delete(this);
+    /*
+    if ((level==0) && del==false){
+        del=true;
+        recursive_delete(this);
+    }
+    */
+    if (p_sub_box != nullptr){
+        delete p_sub_box;
+    }
+    if (p_sister_box != nullptr){
+        delete p_sister_box;
+    }
 }
 
 //checks if the particle is in the box
@@ -180,13 +153,13 @@ void box::append_particle(particle& part){
     //If there is no sub_box and no prior particle in the box, we append the particle to it
     if ((p_sub_box==nullptr) && (p_particle==nullptr)){
         p_particle = &part;
-        mass = mass + part.mass;
+        mass = part.mass;
         mass_center = part.position;
         return;
     }
 
-    //If the box has sub_boxes, we check which one can contain the particle and call our function back on that box, we then adjust the center of mass of the current box
-    if (p_sub_box != nullptr){
+    //If the box has sub_boxes, we find the one that contains the particle and call our function back on that box, we then adjust the center of mass of the current box
+    else if (p_sub_box != nullptr){
         box* ptr = p_sub_box;
         while ((ptr != nullptr) && not(is_in_box(part, *(ptr)))){
             ptr = ptr->p_sister_box;
@@ -194,6 +167,7 @@ void box::append_particle(particle& part){
         if (ptr != nullptr){
             ptr->append_particle(part);
             mass_center = (1.0/(mass + part.mass))*(mass*mass_center + part.mass*part.position);
+            mass = mass + part.mass;
         }
     }
 
@@ -210,9 +184,9 @@ void box::append_particle(particle& part){
         box* sub_box_p_sub_box = nullptr;
         box* sub_box_p_sister_box = nullptr;
 
-        box last_box = box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
+        box* p_last_box = new box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
 
-        box* ptr = &last_box;
+        box* ptr = p_last_box;
 
         //Creating the other boxes
         for (int i = 6; i >= 0; i--){
@@ -229,14 +203,14 @@ void box::append_particle(particle& part){
         //The first box is the sub_box
         p_sub_box = ptr;
 
-        //We call back our function on our two particles
+        //We call back this function on our two particles
+        particle* part_pointer = p_particle;
+        
+        mass_center = (1.0/(mass - p_particle->mass))*(mass*mass_center - p_particle->position);
+        mass = mass - p_particle->mass;
         append_particle(part);
         append_particle(*p_particle);
         p_particle = nullptr;
-    }
-
-    else{
-        cout << "problem" << endl;
     }
 }
 
