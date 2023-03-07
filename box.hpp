@@ -205,8 +205,12 @@ void box::append_particle(particle& part){
 
         //We call back this function on our two particles
         particle* part_pointer = p_particle;
-        
-        mass_center = (1.0/(mass - p_particle->mass))*(mass*mass_center - p_particle->position);
+        if (mass==p_particle->mass){
+            mass_center = center;
+        }
+        else{
+            mass_center = (1.0/(mass - p_particle->mass))*(mass*mass_center - p_particle->position);
+        }
         mass = mass - p_particle->mass;
         append_particle(part);
         append_particle(*p_particle);

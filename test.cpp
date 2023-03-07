@@ -54,6 +54,9 @@ int main(){
     particle p1 = particle(v, v, v);
     particle p2 = particle(u,u,u);
 
+    vecteur<double> k = p1.position - (1/2.0)*p2.position;
+    cout << "diff : " << k << endl;
+
     cout << "p1" << endl << p1 << endl;
     cout << "p2" << endl << p2 << endl;
 
@@ -63,6 +66,9 @@ int main(){
     cout << "p2 is in box : " << is_in_box(p2, b) << endl;
 
     b.append_particle(p1);
+    cout << b << endl << endl;
+
+    b.append_particle(p2);
     cout << b << endl << endl;
 
     b.append_particle(p2);
