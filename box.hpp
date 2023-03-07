@@ -15,7 +15,6 @@ class box{
         box* p_sub_box;
         box* p_sister_box;
 
-
         void erase_box();
         vecteur<vecteur<double>> sub_box_centers();
         // constructors
@@ -68,42 +67,15 @@ void recursive_delete(box* p_box, box* p_mother_box=nullptr, box* parent_list, i
 }
 */
 
-box** remove_parent(box** parent_list, int depth){
-    box** array = new box*[depth - 1];
-    for (int i = 0; i <= depth - 2; i++){
-        array[i] = parent_list[i];
-    }
-    return array;
-}
-
-box** add_parent(box** parent_list, int depth, box* p_parent){
-    box** array = new box*[depth + 1];
-    for (int i = 0; i <= depth - 1; i++){
-        array[i] = parent_list[i];
-    }
-    array[depth] = p_parent;
-    return array;
-}
-
-void recursive_delete(box* p_box, box** parent_list, int depth){
-    if ((p_box==nullptr) && (depth = 0)){
+void recursive_delete(box* p_box){
+    if (p_box==nullptr){
         return;
     }
-    box* ptr = p_box;
-    box* ptr_parent = parent_list[depth - 1];
-    if (ptr->p_sub_box==nullptr){
-        box* ptr_sis = p_box->p_sister_box;
-        while (ptr != nullptr){
-            delete ptr;
-            ptr = ptr_sis;
-            ptr_sis = ptr_sis->p_sister_box;
-        }
-        box** new_parent_list = remove_parent(parent_list, depth);
-        recursive_delete(ptr_parent, new_parent_list, depth - 1);
-    }
-    else{
-        box** new_parent_list = add_parent(parent_list, depth, ptr);
-        recursive_delete(ptr->p_sub_box, new_parent_list, depth + 1);
+    recursive_delete(p_box->p_sub_box);
+    recursive_delete(p_box->p_sister_box);
+    if ((p_box->p_sub_box==nullptr) & (p_box->p_sister_box==nullptr)){
+        delete p_box;
+        return;
     }
 }
 
@@ -118,6 +90,7 @@ void box::erase_box(){
     p_particle = nullptr;
     p_sub_box = nullptr;
     p_sister_box = nullptr;
+    p_parent_box = nullptr;
     mass = 0.;
     level = 0;
 }
