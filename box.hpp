@@ -52,7 +52,7 @@ vecteur<double> box::force(particle& part, vecteur<double> force_buffer){
         return force_buffer;
     }
     if (p_particle != nullptr){
-        vecteur<double> force_particle = (1/pow(norm(part.position - p_particle->position), 3))*part.mass*p_particle->mass*(p_particle->position - part.position);
+        vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/pow(norm(part.position - p_particle->position), 3)))*(p_particle->position - part.position);
         force_buffer = force_buffer + force_particle;
         return force_buffer;
     }
@@ -64,7 +64,7 @@ vecteur<double> box::force(particle& part, vecteur<double> force_buffer){
         double box_size = LENGTH/pow(2, level);
         double distance = norm(part.position - mass_center);
         if (box_size/distance < THETA){
-            vecteur<double> force_box = (1/pow(norm(part.position - mass_center), 3))*part.mass*mass*(mass_center - part.position);;
+            vecteur<double> force_box = (G*part.mass*mass*(1/pow(norm(part.position - mass_center), 3)))*(mass_center - part.position);
             force_buffer = force_buffer + force_box;
             return p_sister_box->force(part, force_buffer);
         }
