@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include <cmath>
 using namespace std;
 
 inline void stop(const string& mes)
@@ -111,4 +111,14 @@ T operator|(const vecteur<T>& u, const vecteur<T>& v)
     for(auto it=u.begin();it!=u.end();++it,++itv) ps+=(*it)*(*itv);
     return ps;
 }
+
+// norme
+template <typename T>
+T norm(const vecteur<T>& u)
+{
+    T nrm=T();
+    for(auto it=u.begin();it!=u.end();++it) nrm+=(*it)*(*it);
+    return sqrt(nrm);
+}
+
 #endif

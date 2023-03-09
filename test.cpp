@@ -75,4 +75,6 @@ int main(){
 
     b.append_particle(p3);
     cout << b << endl << endl;
+
+    cout << norm(p1.position) << endl;
 }

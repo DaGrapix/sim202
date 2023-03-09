@@ -4,6 +4,9 @@
 #include "vecteur.hpp"
 
 double LENGTH = 10;
+double THETA = 0.5;
+double EPSILON = pow(10, -5);
+double G = 1;
 
 class box{
     public:
@@ -15,7 +18,7 @@ class box{
         box* p_sub_box;
         box* p_sister_box;
 
-        void erase_box();
+        void initialize_box();
         vecteur<vecteur<double>> sub_box_centers();
         // constructors
         box();
@@ -23,7 +26,7 @@ class box{
         //destructor
         ~box();
 
-        double* force();
+        vecteur<double> force(particle& part, vecteur<double> force_buffer);
         void append_particle(particle& part);
         void pop_particle(particle& part);
         double mass_calculation();
@@ -42,10 +45,37 @@ ostream& operator <<(ostream& out, box& box_){
 //////////////////    Implémentation      /////////////////////
 ///////////////////////////////////////////////////////////////
 
+// Approximate force calculation of the box on a given particle
 
+vecteur<double> box::force(particle& part, vecteur<double> force_buffer){
+    if (this==nullptr){
+        return force_buffer;
+    }
+    if (p_particle != nullptr){
+        vecteur<double> force_particle = (1/pow(norm(part.position - p_particle->position), 3))*part.mass*p_particle->mass*(p_particle->position - part.position);
+        force_buffer = force_buffer + force_particle;
+        return force_buffer;
+    }
+    else if (is_in_box(part, *this)){
+        force_buffer = p_sub_box->force(part, force_buffer);
+        return p_sister_box->force(part, force_buffer);
+    }
+    else{
+        double box_size = LENGTH/pow(2, level);
+        double distance = norm(part.position - mass_center);
+        if (box_size/distance < THETA){
+            vecteur<double> force_box = (1/pow(norm(part.position - mass_center), 3))*part.mass*mass*(mass_center - part.position);;
+            force_buffer = force_buffer + force_box;
+            return p_sister_box->force(part, force_buffer);
+        }
+        else{
+            return p_sub_box->force(part, force_buffer);
+        }
+    }
+}
 
-//box reinitialiser
-void box::erase_box(){
+//box initializer
+void box::initialize_box(){
     if(center.empty()==false){
         center.clear();
     }
@@ -59,9 +89,9 @@ void box::erase_box(){
     level = 0;
 }
 
-//Constructors
+//constructors
 box::box(){
-    erase_box();
+    initialize_box();
     level = 0;
     center = vecteur<double>(3,0.);
     mass_center = vecteur<double>(3,0.);
@@ -79,12 +109,6 @@ box::box(int level_, vecteur<double> center_, vecteur<double> mass_center_, doub
 
 //destructor
 box::~box(){
-    /*
-    if ((level==0) && del==false){
-        del=true;
-        recursive_delete(this);
-    }
-    */
     if (p_sub_box != nullptr){
         delete p_sub_box;
     }
@@ -93,7 +117,7 @@ box::~box(){
     }
 }
 
-//checks if the particle is in the box
+//checks if a given particle is in a given box
 bool is_in_box(particle& p, box& b){
     double half_side = (0.5)*(LENGTH/(pow(2,b.level)));
     if ((p.position[0] < b.center[0] - half_side) || (p.position[0] > b.center[0] + half_side)){
@@ -150,7 +174,7 @@ vecteur<vecteur<double>> box::sub_box_centers(){
 
 //append a particle in a box
 void box::append_particle(particle& part){
-    //If there is no sub_box and no prior particle in the box, we append the particle to it
+    //if there is no sub_box and no prior particle in the box, we append the particle to it
     if ((p_sub_box==nullptr) && (p_particle==nullptr)){
         p_particle = &part;
         mass = part.mass;
@@ -158,7 +182,7 @@ void box::append_particle(particle& part){
         return;
     }
 
-    //If the box has sub_boxes, we find the one that contains the particle and call our function back on that box, we then adjust the center of mass of the current box
+    //if the box has sub_boxes, we find the one that contains the particle and call our function back on that box, we then adjust the center of mass of the current box
     else if (p_sub_box != nullptr){
         box* ptr = p_sub_box;
         while ((ptr != nullptr) && not(is_in_box(part, *(ptr)))){
@@ -171,11 +195,17 @@ void box::append_particle(particle& part){
         }
     }
 
-    //In the other case, if the box doesn't have sub_boxes, but already has a particle in it, we create the sub_boxes and append the two particles to their respective sub_boxes
+    //in the other case, if the box doesn't have sub_boxes, but already has a particle in it, we create the sub_boxes and append the two particles to their respective sub_boxes
     else if (p_sub_box == nullptr){
+        //if our particle has the same position of another particle, we just forget it for this step.
+        //it's not the prettiest solution, but at least the code won't crash... 
+        if (part.position==p_particle->position){
+            return;
+        }
+
         vecteur<vecteur<double>> box_centers = sub_box_centers();
 
-        //Creating the last box
+        //creating the last box
         int sub_level = level + 1;
         vecteur<double> sub_box_center = box_centers[7];
         vecteur<double> sub_box_mass_center = box_centers[7];
@@ -188,7 +218,7 @@ void box::append_particle(particle& part){
 
         box* ptr = p_last_box;
 
-        //Creating the other boxes
+        //creating the other boxes
         for (int i = 6; i >= 0; i--){
             vecteur<double> sub_box_center = box_centers[i];
             vecteur<double> sub_box_mass_center = box_centers[i];
@@ -200,10 +230,10 @@ void box::append_particle(particle& part){
             ptr = p_current_box;
         }
 
-        //The first box is the sub_box
+        //the first box is the sub_box
         p_sub_box = ptr;
 
-        //We call back this function on our two particles
+        //we call back this function on our two particles
         particle* part_pointer = p_particle;
         if (mass==p_particle->mass){
             mass_center = center;
@@ -218,68 +248,44 @@ void box::append_particle(particle& part){
     }
 }
 
-
-//Pas utile
-/*
-double box::mass_calculation(){
-    // pour la masse d'une particule: ajouter masse dans la d�finition de la classe particle
-    double m = 0;
-    particle* ptr = p_particle;
-    while (ptr != nullptr){
-        m = m + ptr->mass;
-        ptr = ptr->p_next_particle;
-    }
-    return m;
-}
-
-vecteur<double> box::mass_center_calculation(){
-    vecteur<double> m_center = vecteur<double>(3,0);
-    double half_box_length = (1/2)*(LENGTH/(pow(2,level)));
-    particle* ptr = p_particle;
-    while(ptr != nullptr){
-        m_center[0] = m_center[0] + ptr->mass*(ptr->position[0]);
-        m_center[1] = m_center[1] + ptr->mass*(ptr->position[1]);
-        m_center[2] = m_center[2] + ptr->mass*(ptr->position[2]);
-        ptr = ptr->p_next_particle;
-    }
-
-    m_center[0] = m_center[0]/mass;
-    m_center[1] = m_center[1]/mass;
-    m_center[2] = m_center[2]/mass;
-
-    box* box_ptr = p_sub_box;
-    while(box_ptr != nullptr){
-        m_center = m_center + box_ptr->mass_center_calculation();
-        box_ptr = box_ptr->p_sister_box;
-    }
-    return m_center;
-}
-*/
-
 void box::pop_particle (particle& part){
-    //If the box contains a particles (=> it doesn't have sub_boxes), then we check if it is the particle we want to pop
+    //if the box contains a particles (=> it doesn't have sub_boxes), then we check if it is the particle we want to pop
     if (&part == p_particle){
         p_particle = nullptr;
         mass = 0;
-        mass_center = vecteur<double>(3,0);
+        mass_center = center;
+        return;
     }
-
-    //suppression de la particule dans la potentielle sous-boite contenant la particule
-    else if (p_sub_box != nullptr){
+    if ((p_sub_box==nullptr) && (p_sister_box==nullptr)){
+        return;
+    }
+    //deleting the particle in the sub_boxes
+    if (p_sub_box != nullptr){
         box* ptr = p_sub_box;
         while ((not is_in_box(part, *(ptr))) && ptr != nullptr){
             ptr = ptr->p_sister_box;
         }
-        
-        if (ptr == nullptr){
-            cout << "Error, particle not found in box" << endl;
+        //if the pointer is null, that means all of the boxes of this level are empty. Thus we can delete them all.
+        if ((ptr == nullptr) && (level!=0)){
+            delete p_sub_box;
+            p_sub_box = nullptr;
+            return;
         }
         else{
             ptr->pop_particle(part);
-            //calcul du nouveau centre de masse de la boite
-            mass_center = (mass*mass_center - part.mass*part.position)/(mass - part.mass);
-            //calcul de la nouvelle masse de la boite
+            //new mass center
+            if (mass != part.mass){
+                mass_center = (mass*mass_center - part.mass*part.position)/(mass - part.mass);
+            }
+            else{
+                mass_center = center;
+            }
+
+            //new mass
             mass = mass - part.mass;
+
+            //we call back the function to delete empty box levels.
+            pop_particle(part);
         }
     }
 }
