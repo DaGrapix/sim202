@@ -1,0 +1,71 @@
+vecteur<double> box::force(particle& part, vecteur<double> force_buffer){
+    if (this==nullptr){
+        return force_buffer;
+    }
+    if (p_particle != nullptr){
+        vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/pow(norm(part.position - p_particle->position), 3)))*(p_particle->position - part.position);
+        force_buffer = force_buffer + force_particle;
+        return force_buffer;
+    }
+    else if (is_in_box(part, *this)){
+        force_buffer = p_sub_box->force(part, force_buffer);
+        return p_sister_box->force(part, force_buffer);
+    }
+    else{
+        double box_size = LENGTH/pow(2, level);
+        double distance = norm(part.position - mass_center);
+        if (box_size/distance < THETA){
+            vecteur<double> force_box = (G*part.mass*mass*(1/pow(norm(part.position - mass_center), 3)))*(mass_center - part.position);
+            force_buffer = force_buffer + force_box;
+            return p_sister_box->force(part, force_buffer);
+        }
+        else{
+            return p_sub_box->force(part, force_buffer);
+        }
+    }
+}
+
+
+
+
+void box::pop_particle (particle& part){
+    //if the box contains a particles (=> it doesn't have sub_boxes), then we check if it is the particle we want to pop
+    if (&part == p_particle){
+        p_particle = nullptr;
+        mass = 0;
+        mass_center = center;
+        return;
+    }
+    if ((p_sub_box==nullptr) && (p_sister_box==nullptr)){
+        return;
+    }
+    //deleting the particle in the sub_boxes
+    if (p_sub_box != nullptr){
+        box* ptr = p_sub_box;
+        while ((not is_in_box(part, *(ptr))) && ptr != nullptr){
+            ptr = ptr->p_sister_box;
+        }
+        //if the pointer is null, that means all of the boxes of this level are empty. Thus we can delete them all.
+        if ((ptr == nullptr) && (level!=0)){
+            delete p_sub_box;
+            p_sub_box = nullptr;
+            return;
+        }
+        else{
+            ptr->pop_particle(part);
+            //new mass center
+            if (mass != part.mass){
+                mass_center = (mass*mass_center - part.mass*part.position)/(mass - part.mass);
+            }
+            else{
+                mass_center = center;
+            }
+
+            //new mass
+            mass = mass - part.mass;
+
+            //we call back the function to delete empty box levels.
+            pop_particle(part);
+        }
+    }
+}

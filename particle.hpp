@@ -8,7 +8,7 @@
 #include <cmath>
 using namespace std;
 
-double MASS = 1;
+double MASS = 1.0;
 class particle{
     public:
         //mass
@@ -44,8 +44,11 @@ class particle{
         //destructor
         ~particle();
 
-        //surcharge d'opérateur
+        //operator override
         bool operator ==(particle& part);
+
+        void set_position(vector<double> pos);
+        void set_speed(vector<double> sp);
 };
 
 
@@ -153,6 +156,18 @@ bool particle::operator ==(particle& part){
 ostream& operator <<(ostream& out, particle& particle_){
     particle_.print(out);
     return out;
+}
+
+void particle::set_position(vector<double> pos){
+    position[0] = pos[0];
+    position[1] = pos[1];
+    position[2] = pos[2];
+}
+
+void particle::set_speed(vector<double> sp){
+    speed[0] = sp[0];
+    speed[1] = sp[1];
+    speed[2] = sp[2];
 }
 
 #endif
