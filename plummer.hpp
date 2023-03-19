@@ -15,8 +15,8 @@
 
 using namespace std;
 
-double g(double x){
-    return(pow(1-x*x ,3.5));
+double g(double q){
+    return(q*q*pow(1 - q*q, 7.0/2.0));
 }
 
 //initializes N particles so they respect the plummer auto-graviting distribution. Returns a pointer to the first particle.
@@ -38,8 +38,7 @@ particle* plummer_initialisation(){
 
         //Step 1: calculation of r
         double X1 = unif(re);
-        double a = pow(X1,-0.666) - 1.0;
-        double r = pow(a,-0.5);
+        double r = pow(pow(X1,-2.0/3.0) - 1.0,-0.5);
 
         //Step 2: Calculation of position coordinates
         double X2 = unif(re);
@@ -60,17 +59,17 @@ particle* plummer_initialisation(){
             X5 = unif(re);
         }
 
-        double q=X4;
+        double q = X4;
 
-        double V=q*Ve;
+        double V = q*Ve;
 
         //Step 4: Calculation of speed coordinates
         double X6 = unif(re);
         double X7 = unif(re);
 
-        double w=(1.0 - 2*X6)*V;
-        double u=sqrt((V*V - w*w))*cos(2*M_PI*X7);
-        double v=sqrt((V*V - w*w))*sin(2*M_PI*X7);
+        double w = (1.0 - 2*X6)*V;
+        double u = sqrt(V*V - w*w)*cos(2*M_PI*X7);
+        double v = sqrt(V*V - w*w)*sin(2*M_PI*X7);
 
         p_current_particle->position[0] = x;
         p_current_particle->position[1] = y;
