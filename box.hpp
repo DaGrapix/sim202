@@ -175,12 +175,6 @@ void box::append_particle(particle& part){
 
     //in the other case, if the box doesn't have sub_boxes, but already has a particle in it, we create the sub_boxes and append the two particles to their respective sub_boxes
     else if (p_sub_box == nullptr){
-        //if our particle has the same position of another particle, we just forget it for this step.
-        //it's not the prettiest solution, but at least the code won't crash... 
-        //if (part.position==p_particle->position){
-        //    return;
-        //}
-
         vecteur<vecteur<double>> box_centers = sub_box_centers();
 
         //creating the last box
