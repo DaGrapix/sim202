@@ -27,6 +27,26 @@ void export_to_csv(string filename, particle* p_particle){
     }
 }
 
+void test(particle* p_first_particle){
+    particle* ptr1 = p_first_particle;
+    particle* ptr2 = p_first_particle;
+    int j = 0;
+    vecteur<double> force_j = vecteur<double>(3, 0.0);
+    while (ptr1 != nullptr){
+        ptr2 = p_first_particle;
+        while (ptr2 != nullptr){
+            double r = norm(ptr1->position - ptr2->position);
+            if (ptr1 != ptr2){
+                force_j = force_j + (G*ptr1->mass*ptr2->mass*(1.0/(pow(r, 3))))*(ptr2->position - ptr1->position);
+            }
+            ptr2 = ptr2->p_next_particle;
+        }
+        cout << ptr1->force << force_j << endl;
+        ptr1 = ptr1->p_next_particle;
+        j++;
+    }
+}
+
 int main(){
     particle* p_first_particle = plummer_initialisation();
     particle* ptr = p_first_particle;
@@ -34,7 +54,11 @@ int main(){
     for (int i = 1; i <= N_ITER - 1; i++){
         dynamic_iteration(p_first_particle, i);
         //cout << p_first_particle->force << endl;
+
+        //test(p_first_particle);
     }
+    
+
     string filename = "successive_positions";
-    export_to_csv(filename, p_first_particle);
+    //export_to_csv(filename, p_first_particle);
 }

@@ -5,6 +5,24 @@
 #include "box.hpp"
 #include "plummer.hpp"
 
+vecteur<vecteur<double>> force_classique(particle* p_particle, int size){
+    vecteur<vecteur<double>> matrix = vecteur<vecteur<double>>(size, vecteur<double>(3, 0.0));
+    particle* ptr1 = p_particle;
+    particle* ptr2 = p_particle;
+    int i = 0;
+    while (ptr1 != nullptr){
+        ptr2 = p_particle;
+        while (ptr2 != nullptr){
+            double r = norm(ptr1->position - ptr2->position);
+            matrix[i] = matrix[i] + (G*ptr1->mass*ptr2->mass*(1.0/(pow(r, 3))))*(ptr2->position - ptr1->position);
+            ptr2 = ptr2->p_next_particle;
+        }
+        ptr1 = ptr1->p_next_particle;
+        i++;
+    }
+    return matrix;
+}
+
 int main(){
     /*
     particle p = particle();
@@ -99,16 +117,38 @@ int main(){
     b.force(p5);
     b.force(p6);
 
-    cout << "force on p1    : " << p1.force << endl;
-    cout << "force on p2    : " << p2.force << endl;
-    cout << "force on p3    : " << p3.force << endl;
-    cout << "force on p4    : " << p4.force << endl;
-    cout << "force on p5    : " << p5.force << endl;
-    cout << "force on p6    : " << p6.force << endl;
+    p1.p_next_particle = &p2;
+    p2.p_next_particle = &p3;
+    p3.p_next_particle = &p4;
+    p4.p_next_particle = &p5;
+    p5.p_next_particle = &p6;
 
+    vecteur<vecteur<double>> matrix = vecteur<vecteur<double>>(6, vecteur<double>(3, 0.0));
+    particle* ptr1 = &p1;
+    particle* ptr2 = &p1;
+    int i = 0;
+    vecteur<double> force = vecteur<double>(3, 0.0);
+    while (ptr1 != nullptr){
+        ptr2 = &p1;
+        while (ptr2 != nullptr){
+            double r = norm(ptr1->position - ptr2->position);
+            if (ptr1 != ptr2){
+                force = (G*ptr1->mass*ptr2->mass*(1.0/(pow(r, 3))))*(ptr2->position - ptr1->position);
+                matrix[i] = matrix[i] + force;
+            }
+            ptr2 = ptr2->p_next_particle;
+        }
+        ptr1 = ptr1->p_next_particle;
+        i++;
+    }
 
-    cout << random_variable() << endl;
-    cout << random_variable() << endl;
+    cout << "force on p1    : " << p1.force << matrix[0] << endl;
+    cout << "force on p2    : " << p2.force << matrix[1] << endl;
+    cout << "force on p3    : " << p3.force << matrix[2] << endl;
+    cout << "force on p4    : " << p4.force << matrix[3] << endl;
+    cout << "force on p5    : " << p5.force << matrix[4] << endl;
+    cout << "force on p6    : " << p6.force << matrix[5] << endl;
+
 
     /*
     particle* p_first_particle = plummer_initialisation();
@@ -121,3 +161,4 @@ int main(){
     }
     */
 }
+

@@ -177,9 +177,9 @@ void box::append_particle(particle& part){
     else if (p_sub_box == nullptr){
         //if our particle has the same position of another particle, we just forget it for this step.
         //it's not the prettiest solution, but at least the code won't crash... 
-        if (part.position==p_particle->position){
-            return;
-        }
+        //if (part.position==p_particle->position){
+        //    return;
+        //}
 
         vecteur<vecteur<double>> box_centers = sub_box_centers();
 
@@ -210,18 +210,13 @@ void box::append_particle(particle& part){
         //the first box is the sub_box
         p_sub_box = ptr;
 
-        //we call back this function on our two particles
+        //we remove the particle that was in the box and the function on the two particles
         particle* part_pointer = p_particle;
-        if (mass==p_particle->mass){
-            mass_center = center;
-        }
-        else{
-            mass_center = (1.0/(mass - p_particle->mass))*(mass*mass_center - p_particle->position);
-        }
-        mass = mass - p_particle->mass;
-        append_particle(part);
-        append_particle(*p_particle);
+        mass_center = center;
+        mass = 0.0;
         p_particle = nullptr;
+        append_particle(part);
+        append_particle(*part_pointer);
     }
 }
 
