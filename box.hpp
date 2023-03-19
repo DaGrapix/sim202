@@ -1,12 +1,9 @@
 #ifndef BOX_HPP
 #define BOX_HPP
+
+#include "constants.hpp"
 #include "particle.hpp"
 #include "vecteur.hpp"
-
-double LENGTH = 10.0;
-double THETA = 0.5;
-double EPSILON = pow(10.0, -5);
-double G = 1.0;
 
 class box{
     public:
@@ -19,26 +16,36 @@ class box{
         box* p_sister_box;
 
         void initialize_box();
+
+        //function returning the centers of all sub boxes
         vecteur<vecteur<double>> sub_box_centers();
-        // constructors
+
+        //constructors
         box();
         box(int level, vecteur<double> center, vecteur<double> mass_center, double mass, particle* p_particle, box* p_sub_box, box* p_sister_box );
+        
         //destructor
         ~box();
 
+        //approximate calculation of the force exerted by the box on a given particle
         void force(particle& part);
+
+        //append a particle to a box, possibly subdividing it if it already contains a particle
         void append_particle(particle& part);
-        double mass_calculation();
-        vecteur<double> mass_center_calculation();
+
+        //print option
         void print(ostream& out=cout);
 };
 
+//function returning true if a particle is contained in a box
 bool is_in_box(particle& p, box& b);
 
+//operator override
 ostream& operator <<(ostream& out, box& box_){
     box_.print(out);
     return out;
 }
+
 
 ///////////////////////////////////////////////////////////////
 //////////////////    Implémentation      /////////////////////
@@ -142,7 +149,7 @@ vecteur<vecteur<double>> box::sub_box_centers(){
     return centers_matrix;
 }
 
-//append a particle in a box
+//append a particle to a box
 void box::append_particle(particle& part){
     //if there is no sub_box and no prior particle in the box, we append the particle to it
     if ((p_sub_box==nullptr) && (p_particle==nullptr)){
@@ -183,9 +190,8 @@ void box::append_particle(particle& part){
         particle* sub_box_p_particle = nullptr;
         box* sub_box_p_sub_box = nullptr;
         box* sub_box_p_sister_box = nullptr;
-
+    
         box* p_last_box = new box(sub_level, sub_box_center, sub_box_mass_center, sub_box_mass, sub_box_p_particle, sub_box_p_sub_box, sub_box_p_sister_box);
-
         box* ptr = p_last_box;
 
         //creating the other boxes
@@ -218,7 +224,7 @@ void box::append_particle(particle& part){
     }
 }
 
-// Approximate force calculation of the box on a given particle
+// Approximate calculation of the force of a box on a given particle
 void box::force(particle& part){
     if (this==nullptr){
         return;
@@ -227,32 +233,33 @@ void box::force(particle& part){
         part.force = vecteur<double>(3, 0.0);
     }
     if (p_particle != nullptr){
+        //we split the cases on the particle to avoid singularities
         if (p_particle != &part){
+            //classic force calculation, with the addition of an EPSILON to avoid singularities due to particle collisions
             vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/(pow(norm(part.position - p_particle->position), 3) + EPSILON)))*(p_particle->position - part.position);
             part.force = part.force + force_particle;
         }
-        p_sister_box->force(part);
     }
     else if (is_in_box(part, *this)){
         p_sub_box->force(part);
-        p_sister_box->force(part);
     }
     else{
         double box_size = LENGTH/pow(2, level);
         double distance = norm(part.position - mass_center);
         double ratio = box_size/distance;
+
+        //If the following criterion is fulfilled, we assume that the box is far enough to the particle to consider approximating the resulting force
         if (ratio < THETA){
             vecteur<double> force_box = (G*part.mass*mass*(1/pow(norm(part.position - mass_center), 3)))*(mass_center - part.position);
             part.force = part.force + force_box;
-            if (p_sister_box != nullptr) {
-                p_sister_box->force(part);
-            }
         }
+        //in the other case, we recursively call our function on the sub_box
         else{
             p_sub_box->force(part);
-            p_sister_box->force(part);
         }
     }
+    //we finish by calculating the resulting force of all sister boxes
+    p_sister_box->force(part);
 }
 
 

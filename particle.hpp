@@ -1,14 +1,16 @@
 #ifndef PARTICLE_HPP
 #define PARTICLE_HPP
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <stdbool.h>
-#include "vecteur.hpp"
 #include <cmath>
+#include "vecteur.hpp"
+#include "constants.hpp"
+
 using namespace std;
 
-double MASS = 1.0;
 class particle{
     public:
         //mass
@@ -79,9 +81,10 @@ void particle::erase_particle(){
 //Constructors
 particle::particle(){
     erase_particle();
-    position = vecteur<double>(3, 0);
-    speed = vecteur<double>(3, 0);
-    force = vecteur<double>(3, 0);
+    position = vecteur<double>(3, 0.0);
+    speed = vecteur<double>(3, 0.0);
+    force = vecteur<double>(3, 0.0);
+    mass = MASS;
 
     vecteur<double> default_vecteur = vecteur<double>(3,0);
     successive_positions = vecteur<vecteur<double>>(1, default_vecteur);
