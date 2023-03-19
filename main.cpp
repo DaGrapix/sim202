@@ -9,7 +9,7 @@
 //the exported file is a csv. Each line of the file contains the successive positions x;y;z of a particle.
 //each line representing a given particle
 void export_to_csv(string filename, particle* p_particle){
-    ofstream myFile(filename);
+    ofstream myFile(filename + "_N_" + to_string(N) + "_NITER_" + to_string(N_ITER) + ".csv");
     
     particle* ptr = p_particle;
     while (ptr != nullptr){
@@ -33,7 +33,8 @@ int main(){
 
     for (int i = 1; i <= N_ITER - 1; i++){
         dynamic_iteration(p_first_particle, i);
+        //cout << p_first_particle->force << endl;
     }
-    string filename = "successive_positions.csv";
+    string filename = "successive_positions";
     export_to_csv(filename, p_first_particle);
 }

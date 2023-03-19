@@ -89,19 +89,17 @@ particle* plummer_initialisation(){
         p_current_particle->successive_positions[0] = p_current_particle->position;
     }
 
+    //Calculation of predicted initial speeds
     box b = box();
 
+    //append the particles to the tree 
     particle* ptr = p_current_particle;
     while (ptr != nullptr){
         b.append_particle(*ptr);
         ptr = ptr->p_next_particle;
     }
 
-    while (ptr != nullptr){
-        b.append_particle(*ptr);
-        ptr = ptr->p_next_particle;
-    }
-
+    //calculate resulting forces on every particle
     ptr = p_current_particle;
     while (ptr != nullptr){
         b.force(*ptr);
@@ -134,7 +132,7 @@ void dynamic_iteration(particle* p_particle, int iteration){
         //calculate the force on particle *ptr
         b.force(*ptr);
 
-        //update speed;
+        //update speed_approx;
         ptr->speed_approx = ptr->speed_approx + (DT/ptr->mass)*ptr->force;
 
         //update position

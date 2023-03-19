@@ -6,7 +6,7 @@
 
 int N = 100;
 double M = 1.0;
-double E = 1.0;
+double E = 0.1;
 double LENGTH = 1000.0;
 double THETA = 0.5;
 double EPSILON = pow(10.0, -5);

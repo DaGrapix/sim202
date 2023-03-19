@@ -237,7 +237,7 @@ void box::force(particle& part){
         //we split the cases on the particle to avoid singularities
         if (p_particle != &part){
             //classic force calculation, with the addition of an EPSILON to avoid singularities due to particle collisions
-            vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/(pow(norm(part.position - p_particle->position), 3) + EPSILON)))*(p_particle->position - part.position);
+            vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/(pow(norm(p_particle->position - part.position), 3) )))*(p_particle->position - part.position);
             part.force = part.force + force_particle;
         }
     }
@@ -251,7 +251,13 @@ void box::force(particle& part){
 
         //If the following criterion is fulfilled, we assume that the box is far enough to the particle to consider approximating the resulting force
         if (ratio < THETA){
-            vecteur<double> force_box = (G*part.mass*mass*(1/pow(norm(part.position - mass_center), 3)))*(mass_center - part.position);
+            vecteur<double> force_box = vecteur<double>(3, 0.0);
+            if (norm(mass_center - part.position) > EPSILON){
+                force_box = (G*part.mass*mass*(1/pow(norm(mass_center - part.position), 3)))*(mass_center - part.position);
+            }
+            else{
+                force_box = (G*part.mass*mass*(1/pow(EPSILON, 3)))*(mass_center - part.position);
+            }
             part.force = part.force + force_box;
         }
         //in the other case, we recursively call our function on the sub_box
