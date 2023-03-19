@@ -211,12 +211,12 @@ void box::append_particle(particle& part){
         p_sub_box = ptr;
 
         //we remove the particle that was in the box and the function on the two particles
-        particle* part_pointer = p_particle;
+        particle* tmp = p_particle;
         mass_center = center;
         mass = 0.0;
         p_particle = nullptr;
         append_particle(part);
-        append_particle(*part_pointer);
+        append_particle(*tmp);
     }
 }
 
