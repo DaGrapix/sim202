@@ -88,7 +88,7 @@ cout<<"initialisation"<<endl<<res<<endl;
 }
 */
 
-
+//initializes N particles so they respect the plummer auto-graviting distribution. Returns a pointer to the first particle.
 particle* plummer_initialisation(){
     //random generator initialization
     double lower_bound = 0.0;
@@ -149,8 +149,41 @@ particle* plummer_initialisation(){
         p_current_particle->speed[1] = v;
         p_current_particle->speed[2] = w;
 
+        p_current_particle->position = ((3*M_PI/64.0)*M*M/E)*p_current_particle->position;
+        p_current_particle->speed = ((64/(3.0*M_PI))*sqrt(E)/sqrt(M))*p_current_particle->speed;
+
+        p_current_particle->successive_positions[0] = p_current_particle->position;
     }
+
     return(p_current_particle);
+}
+
+void dynamic_iteration(particle* p_particle, int iteration){
+    //On each iteration, we destroy the tree and recreate it
+    box b = box();
+
+    particle* ptr = p_particle;
+
+    while (ptr != nullptr){
+        b.append_particle(*ptr);
+        ptr = ptr->p_next_particle;
+    }
+
+    ptr = p_particle;
+    while (ptr != nullptr){
+        //calculate the force on particle *ptr
+        b.force(*ptr);
+
+        //update speed;
+        ptr->speed = ptr->speed + (DT/ptr->mass)*ptr->force;
+
+        //update position
+        ptr->position = ptr->position + DT*ptr->speed;
+
+        //save the new position
+        ptr->successive_positions[iteration] = ptr->position;
+        ptr = ptr->p_next_particle;
+    }
 }
 
 #endif

@@ -86,8 +86,7 @@ particle::particle(){
     force = vecteur<double>(3, 0.0);
     mass = MASS;
 
-    vecteur<double> default_vecteur = vecteur<double>(3,0);
-    successive_positions = vecteur<vecteur<double>>(1, default_vecteur);
+    successive_positions = vecteur<vecteur<double>>(N_ITER, vecteur<double>(3,0));
     p_next_particle = nullptr;
 }
 
@@ -96,6 +95,7 @@ particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecte
     position = position_vecteur;
     speed = speed_vecteur;
     force = force_vecteur;
+    successive_positions = vecteur<vecteur<double>>(N_ITER, vecteur<double>(3,0));
     mass = MASS;
 }
 
@@ -104,6 +104,7 @@ particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecte
     position = position_vecteur;
     speed = speed_vecteur;
     force = force_vecteur;
+    successive_positions = vecteur<vecteur<double>>(N_ITER, vecteur<double>(3,0));
     mass = mass_;
 }
 
