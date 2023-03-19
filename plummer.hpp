@@ -31,6 +31,43 @@ particle* plummer_initialisation(){
     particle* p_previous_particle = nullptr;
     particle* p_current_particle = p_last_particle;
 
+    //Step 1: calculation of r
+    double X1 = unif(re);
+    double r = pow(pow(X1,-2.0/3.0) - 1.0,-0.5);
+    //Step 2: Calculation of position coordinates
+    double X2 = unif(re);
+    double X3 = unif(re);
+    double z = (1 - 2*X2)*r;
+    double x = sqrt((r*r - z*z))*cos(2*M_PI*X3);
+    double y = (r*r - z*z)*sin(2*M_PI*X3);
+    //Step 3: Calculation of V, Ve and g(q)
+    double Ve = sqrt(2.0)*pow(1.0 + r*r, -0.25);
+    double X4 = unif(re);
+    double X5 = unif(re);
+    while(X5 >= 10*g(X4)){
+        X4 = unif(re);
+        X5 = unif(re);
+    }
+    double q = X4;
+    double V = q*Ve;
+    //Step 4: Calculation of speed coordinates
+    double X6 = unif(re);
+    double X7 = unif(re);
+    double w = (1.0 - 2*X6)*V;
+    double u = sqrt(V*V - w*w)*cos(2*M_PI*X7);
+    double v = sqrt(V*V - w*w)*sin(2*M_PI*X7);
+    p_current_particle->position[0] = x;
+    p_current_particle->position[1] = y;
+    p_current_particle->position[2] = z;
+    p_current_particle->speed[0] = u;
+    p_current_particle->speed[1] = v;
+    p_current_particle->speed[2] = w;
+    double length_constant = (3*M_PI/64.0)*M*M/E;
+    double speed_constant = (64/(3.0*M_PI))*sqrt(E)/sqrt(M);
+    p_current_particle->position = length_constant*p_current_particle->position;
+    p_current_particle->speed = speed_constant*p_current_particle->speed;
+    p_current_particle->successive_positions[0] = p_current_particle->position;
+
     for (int i = 0; i <= N-2; i++){
         p_previous_particle = p_current_particle;
         p_current_particle = new particle();

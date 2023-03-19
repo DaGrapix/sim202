@@ -238,7 +238,7 @@ void box::force(particle& part){
         double box_size = LENGTH/pow(2, level);
         double distance = norm(part.position - mass_center);
         double ratio = box_size/distance;
-
+        
         //If the following criterion is fulfilled, we assume that the box is far enough to the particle to consider approximating the resulting force
         //of the center of mass of the box, rather than the individual forces of each particle containned in the box
         if (ratio < THETA){

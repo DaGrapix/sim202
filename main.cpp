@@ -60,5 +60,5 @@ int main(){
     
 
     string filename = "successive_positions";
-    //export_to_csv(filename, p_first_particle);
+    export_to_csv(filename, p_first_particle);
 }
