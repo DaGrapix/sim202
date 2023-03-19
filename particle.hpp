@@ -23,7 +23,7 @@ class particle{
         //speed
         vecteur<double> speed;
 
-        //speed
+        //speed_approx is the speed used to iterate our dynamics
         vecteur<double> speed_approx;
 
         //force

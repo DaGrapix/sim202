@@ -237,10 +237,11 @@ void box::force(particle& part){
         //we split the cases on the particle to avoid singularities
         if (p_particle != &part){
             //classic force calculation, with the addition of an EPSILON to avoid singularities due to particle collisions
-            vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/(pow(norm(p_particle->position - part.position), 3) )))*(p_particle->position - part.position);
+            vecteur<double> force_particle = (G*part.mass*p_particle->mass*(1/(pow(norm(p_particle->position - part.position), 3) + EPSILON)))*(p_particle->position - part.position);
             part.force = part.force + force_particle;
         }
     }
+    //if the particle is in the box, we don't calculate the approximate force, we call back the function on the sub_boxes
     else if (is_in_box(part, *this)){
         p_sub_box->force(part);
     }
@@ -250,22 +251,17 @@ void box::force(particle& part){
         double ratio = box_size/distance;
 
         //If the following criterion is fulfilled, we assume that the box is far enough to the particle to consider approximating the resulting force
+        //of the center of mass of the box, rather than the individual forces of each particle containned in the box
         if (ratio < THETA){
-            vecteur<double> force_box = vecteur<double>(3, 0.0);
-            if (norm(mass_center - part.position) > EPSILON){
-                force_box = (G*part.mass*mass*(1/pow(norm(mass_center - part.position), 3)))*(mass_center - part.position);
-            }
-            else{
-                force_box = (G*part.mass*mass*(1/pow(EPSILON, 3)))*(mass_center - part.position);
-            }
+            vecteur<double> force_box = (G*part.mass*mass*(1/(pow(norm(mass_center - part.position), 3) + EPSILON)))*(mass_center - part.position);
             part.force = part.force + force_box;
         }
-        //in the other case, we recursively call our function on the sub_box
+        //in the other case, we recursively call our function on the sub_boxes
         else{
             p_sub_box->force(part);
         }
     }
-    //we finish by calculating the resulting force of all sister boxes
+    //we finish by calculating the resulting force exerted by the sister boxes
     p_sister_box->force(part);
 }
 
