@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
+
 #include <cmath>
 
 int N = 100;
@@ -15,5 +16,6 @@ double MASS = 1/(double)N;
 double DT = 0.1;
 int SEED = 1;
 int N_ITER = 1000;
+
 
 #endif

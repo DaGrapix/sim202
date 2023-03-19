@@ -1,6 +1,7 @@
 #ifndef PARTICLE_HPP
 #define PARTICLE_HPP
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -173,5 +174,6 @@ void particle::set_speed(vector<double> sp){
     speed[1] = sp[1];
     speed[2] = sp[2];
 }
+
 
 #endif

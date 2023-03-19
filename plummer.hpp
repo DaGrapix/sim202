@@ -90,7 +90,8 @@ particle* plummer_initialisation(){
 }
 
 void dynamic_iteration(particle* p_particle, int iteration){
-    //On each iteration, we destroy the tree and recreate it
+    //on each iteration, we destroy the previous tree and create one with the new positions
+    //note that the tree is only used to calculate the forces, therefore it is okay to destroy it
     box b = box();
 
     particle* ptr = p_particle;
@@ -116,5 +117,6 @@ void dynamic_iteration(particle* p_particle, int iteration){
         ptr = ptr->p_next_particle;
     }
 }
+
 
 #endif

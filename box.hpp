@@ -1,6 +1,7 @@
 #ifndef BOX_HPP
 #define BOX_HPP
 
+
 #include "constants.hpp"
 #include "particle.hpp"
 #include "vecteur.hpp"
