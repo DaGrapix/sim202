@@ -6,7 +6,7 @@
 #include <string>
 #include <fstream>
 
-//the exported file is a csv. Each line of the file contains the successive positions x;y;z of a particle.
+//the exported file is a csv. Each line of the file contains the successive positions x;y;z; of a particle.
 //each line representing a given particle
 void export_to_csv(string filename, particle* p_particle){
     ofstream myFile(filename + "_N_" + to_string(N) + "_NITER_" + to_string(N_ITER) + ".csv");
