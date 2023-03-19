@@ -89,6 +89,31 @@ particle* plummer_initialisation(){
         p_current_particle->successive_positions[0] = p_current_particle->position;
     }
 
+    box b = box();
+
+    particle* ptr = p_current_particle;
+    while (ptr != nullptr){
+        b.append_particle(*ptr);
+        ptr = ptr->p_next_particle;
+    }
+
+    while (ptr != nullptr){
+        b.append_particle(*ptr);
+        ptr = ptr->p_next_particle;
+    }
+
+    ptr = p_current_particle;
+    while (ptr != nullptr){
+        b.force(*ptr);
+        ptr = ptr->p_next_particle;
+    }
+
+    ptr = p_current_particle;
+    while (ptr != nullptr){
+        ptr->speed_approx = ptr->speed + (DT/(2*ptr->mass))*ptr->force;
+        ptr = ptr->p_next_particle;
+    }
+
     return(p_current_particle);
 }
 
@@ -110,10 +135,10 @@ void dynamic_iteration(particle* p_particle, int iteration){
         b.force(*ptr);
 
         //update speed;
-        ptr->speed = ptr->speed + (DT/ptr->mass)*ptr->force;
+        ptr->speed_approx = ptr->speed_approx + (DT/ptr->mass)*ptr->force;
 
         //update position
-        ptr->position = ptr->position + DT*ptr->speed;
+        ptr->position = ptr->position + DT*ptr->speed_approx;
 
         //save the new position
         ptr->successive_positions[iteration] = ptr->position;

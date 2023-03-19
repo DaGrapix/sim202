@@ -23,6 +23,9 @@ class particle{
         //speed
         vecteur<double> speed;
 
+        //speed
+        vecteur<double> speed_approx;
+
         //force
         vecteur<double> force;
 
@@ -70,6 +73,9 @@ void particle::erase_particle(){
     if (speed.empty()==false){
         speed.clear();
     }
+    if (speed_approx.empty()==false){
+        speed_approx.clear();
+    }
     if (force.empty()==false){
         force.clear();
     }
@@ -84,6 +90,7 @@ particle::particle(){
     erase_particle();
     position = vecteur<double>(3, 0.0);
     speed = vecteur<double>(3, 0.0);
+    speed_approx = vecteur<double>(3, 0.0);
     force = vecteur<double>(3, 0.0);
     mass = MASS;
 
@@ -95,6 +102,7 @@ particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecte
     erase_particle();
     position = position_vecteur;
     speed = speed_vecteur;
+    speed_approx = vecteur<double>(3, 0.0);
     force = force_vecteur;
     successive_positions = vecteur<vecteur<double>>(N_ITER, vecteur<double>(3,0));
     mass = MASS;
@@ -104,6 +112,7 @@ particle::particle(vecteur<double> position_vecteur, vecteur<double> speed_vecte
     erase_particle();
     position = position_vecteur;
     speed = speed_vecteur;
+    speed_approx = vecteur<double>(3, 0.0);
     force = force_vecteur;
     successive_positions = vecteur<vecteur<double>>(N_ITER, vecteur<double>(3,0));
     mass = mass_;
@@ -144,6 +153,9 @@ bool particle::operator ==(particle& part){
         return false;
     }
     if (not(speed == part.speed)){
+        return false;
+    }
+    if (not(speed_approx == part.speed_approx)){
         return false;
     }
     if (not(force == part.force)){
