@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include "constants.hpp"
 #include "particle.hpp"
 #include "vecteur.hpp"
 #include "box.hpp"
+#include "plummer.hpp"
 
 int main(){
     /*
@@ -48,6 +50,8 @@ int main(){
         cout << vec2[i] << " ";
     }
     */
+
+    srand(10);
     vecteur<double> v(3, 1.0);
     vecteur<double> u(3, -1.0);
     vecteur<double> w(3, 5.0);
@@ -57,10 +61,10 @@ int main(){
     particle p3 = particle(w, w, w);
 
     particle p4 = particle();
-    p4.set_position(vector<double>{1, 5, 7});
+    p4.set_position(vector<double>{9, 9, 9});
 
     particle p5 = particle();
-    p5.set_position(vector<double>{-5.2, -2.7, -8.3});
+    p5.set_position(vector<double>{-1, 1, 0});
 
     vecteur<double> k = p1.position - (1/2.0)*p2.position;
     cout << "diff : " << k << endl;
@@ -101,4 +105,19 @@ int main(){
     cout << "force on p4    : " << p4.force << endl;
     cout << "force on p5    : " << p5.force << endl;
     cout << "force on p6    : " << p6.force << endl;
+
+
+    cout << random_variable() << endl;
+    cout << random_variable() << endl;
+
+    /*
+    particle* p_first_particle = plummer_initialisation();
+    particle* ptr = p_first_particle;
+    int counter = 1;
+    while (ptr != nullptr){
+        cout << counter << *ptr << endl;
+        counter++;
+        ptr = ptr->p_next_particle;
+    }
+    */
 }
