@@ -80,8 +80,11 @@ particle* plummer_initialisation(){
         p_current_particle->speed[1] = v;
         p_current_particle->speed[2] = w;
 
-        p_current_particle->position = ((3*M_PI/64.0)*M*M/E)*p_current_particle->position;
-        p_current_particle->speed = ((64/(3.0*M_PI))*sqrt(E)/sqrt(M))*p_current_particle->speed;
+        double length_constant = ((3*M_PI/64.0)*M*M/E);
+        double speed_constant = ((64/(3.0*M_PI))*sqrt(E)/sqrt(M));
+
+        p_current_particle->position = length_constant*p_current_particle->position;
+        p_current_particle->speed = speed_constant*p_current_particle->speed;
 
         p_current_particle->successive_positions[0] = p_current_particle->position;
     }
