@@ -1,4 +1,7 @@
 # SIM 202 
-This project aims to represent the interaction between two planets that merged together.
+This project is an attempt at implementing Barne's Hut algorithm to create a gravitation simulation.
 
-I wouldn't have said better.
+To run this, you need:
+* To adapt the constants present in constants.hpp as you wish
+* To run main.cpp
+* To handle the created .csv with the MATLAB code
