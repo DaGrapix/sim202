@@ -219,6 +219,7 @@ void box::force(particle& part){
     if (this==nullptr){
         return;
     }
+    //we initialise the force to 0 at the beginning
     if (level==0){
         part.force = vecteur<double>(3, 0.0);
     }
@@ -230,7 +231,7 @@ void box::force(particle& part){
             part.force = part.force + force_particle;
         }
     }
-    //if the particle is in the box, we don't calculate the approximate force, we call back the function on the sub_boxes
+    //if the particle is in the sub-boxes, we call back the function on the sub_boxes
     else if (is_in_box(part, *this)){
         p_sub_box->force(part);
     }
